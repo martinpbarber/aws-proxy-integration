@@ -9,7 +9,7 @@ ACTIVATE := . $(VENV)/bin/activate
 
 .PHONY: test
 test: lint
-	$(ACTIVATE) && coverage run --omit='tests/*,$(VENV)/*' -m pytest -vv && coverage report -m
+	$(ACTIVATE) && coverage run --omit='tests/*,$(VENV)/*,conftest.py' -m pytest -vv && coverage report -m
 
 .PHONY: lint
 lint: | $(VENV)
