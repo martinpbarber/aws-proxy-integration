@@ -1,4 +1,5 @@
 MODULE := aws_proxy_integration
+TESTS := tests
 
 LINT = pylint
 
@@ -14,6 +15,7 @@ test: lint
 .PHONY: lint
 lint: | $(VENV)
 	$(ACTIVATE) && $(LINT) $(MODULE)
+	$(ACTIVATE) && $(LINT) $(TESTS)/*
 
 $(VENV): requirements.txt
 	$(PYTHON) -m venv $(VENV)
