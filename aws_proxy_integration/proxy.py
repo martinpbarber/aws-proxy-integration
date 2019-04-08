@@ -70,4 +70,44 @@ class Proxy():
         if view_function is None:
             raise ValueError('Route not registered: %s' % resource)
 
-        return view_function()
+        response = view_function()
+        if isinstance(response, str):
+            return Response(response).to_dict()
+
+        return Response('', status_code='500').to_dict()
+
+# pylint: disable=too-few-public-methods
+class Response():
+    """Proxy Integration response
+
+    The Lambda function response must be in the following format.
+    {
+        "statusCode":
+            String containing a valid HTTP status code
+        "headers": May be omitted
+            Dictionary containing a any API-specific custom headers
+        "body": May be empty string
+            JSON string of the response body, binary body must be Base64-encoded
+        "isBase64Encoded":
+            Boolean to indicate if the response body is Base64-encoded
+    }
+    """
+
+    def __init__(self, body,
+                 status_code='200', headers=None, is_base_64_encoded=False):
+        self._body = body
+        self._status_code = status_code
+        if headers is None:
+            self._headers = {}
+        else:
+            self._headers = headers
+        self._is_base_64_encoded = is_base_64_encoded
+
+    def to_dict(self):
+        """Return Response object as a dictionary"""
+        return {
+            'body': self._body,
+            'statusCode': self._status_code,
+            'headers': self._headers,
+            'isBase64Encoded': self._is_base_64_encoded,
+        }
