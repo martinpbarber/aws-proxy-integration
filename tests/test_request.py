@@ -6,11 +6,11 @@ def api_gateway_proxy_event():
     """Return the event"""
     return {
         #String containing the resource path
-        "resource": "RESOURCE",
+        "resource": "",
         # String containing the URI path
-        "path": "PATH",
+        "path": "",
         # String containing the HTTP method in uppercase
-        "httpMethod": "METHOD",
+        "httpMethod": "",
         # Dictionary of case sensitive HTTP request headers
         "headers": {},
         # Dictionary of case sensitive multi-value HTTP request headers
@@ -26,7 +26,7 @@ def api_gateway_proxy_event():
         # Dictionary of case sensitive Request Context information
         "requestContext": {},
         # JSON string of the request body
-        "body": "BODY",
+        "body": "",
         # Boolean to indicate if the request body is Base64-encoded
         "isBase64Encoded": False,
     }
