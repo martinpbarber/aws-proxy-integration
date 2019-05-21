@@ -5,29 +5,17 @@ from aws_proxy_integration.proxy import Request
 def api_gateway_proxy_event():
     """Return the event"""
     return {
-        #String containing the resource path
         "resource": "",
-        # String containing the URI path
         "path": "",
-        # String containing the HTTP method in uppercase
         "httpMethod": "",
-        # Dictionary of case sensitive HTTP request headers
         "headers": {},
-        # Dictionary of case sensitive multi-value HTTP request headers
         "multiValueHeaders": {},
-        # Dictionary of case sensitive query string parameters
         "queryStringParameters": {},
-        # Dictionary of case sensitive multi-value query string parameters
         "multiValueQueryStringParameters": {},
-        # Dictionary of case sensitive path parameters
         "pathParameters": {},
-        # Dictionary of case sensitive API Gateway stage variables
         "stageVariables": {},
-        # Dictionary of case sensitive Request Context information
         "requestContext": {},
-        # JSON string of the request body
         "body": "",
-        # Boolean to indicate if the request body is Base64-encoded
         "isBase64Encoded": False,
     }
 
