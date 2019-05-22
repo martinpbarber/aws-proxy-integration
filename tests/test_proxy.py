@@ -38,6 +38,8 @@ def proxy_with_index_route(proxy):
 def test_proxy_init(proxy):
     """Proxy creation"""
     assert proxy
+    assert proxy.logger
+    assert proxy.request is None
 
 def test_proxy_add_route(event, context, proxy_with_index_route):
     """Add a route to Proxy"""
