@@ -3,11 +3,16 @@ aws_proxy_integration.proxy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module processes requests from API Gateway using Lambda proxy integration.
 """
+import logging
 from http import HTTPStatus
+
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.INFO)
 
 class Proxy():
     """API Gateway Lambda proxy integration"""
     def __init__(self):
+        self._logger = LOGGER
         self._router = Router()
 
     def route(self, path):
