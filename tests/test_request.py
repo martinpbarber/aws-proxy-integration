@@ -1,23 +1,11 @@
 """Test for aws_proxy_integration.proxy.Response class"""
 import pytest
+import common
 from aws_proxy_integration.proxy import Request
 
 def api_gateway_proxy_event():
-    """Return the event"""
-    return {
-        "resource": "",
-        "path": "",
-        "httpMethod": "",
-        "headers": {},
-        "multiValueHeaders": {},
-        "queryStringParameters": {},
-        "multiValueQueryStringParameters": {},
-        "pathParameters": {},
-        "stageVariables": {},
-        "requestContext": {},
-        "body": "",
-        "isBase64Encoded": False,
-    }
+    """Return an empty API Gateway proxy event"""
+    return common.api_gateway_proxy_event()
 
 ################################################################################
 # Tests for Request class

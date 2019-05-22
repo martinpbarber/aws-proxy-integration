@@ -8,31 +8,48 @@ from http import HTTPStatus
 class Proxy():
     """API Gateway Lambda proxy integration"""
     def __init__(self):
-        self.routes = {}
+        self._router = Router()
 
-    def route(self, resource):
+    def route(self, path):
         """Route Decorator"""
         def decorator(view_function):
-            self.routes[resource] = view_function
+            self._router.add_route(path, view_function)
             return view_function
-
         return decorator
 
     def __call__(self, event, context):
         """Process API Gateway event"""
         request = Request(event)
+        response = self._router.route(request)
+        return response
 
-        view_function = self.routes.get(request.resource)
-        if view_function is None:
-            raise ValueError('Route not registered: %s' % request.resource)
 
-        response = view_function()
+class Router():
+    """Register and process routes"""
+    def __init__(self):
+        self.routes = {}
+
+    def add_route(self, path, function):
+        """Add a route"""
+        self.routes[path] = function
+
+    def route(self, request):
+        """Route a request to the associated function"""
+        function = self._get_function(request)
+
+        response = function()
         if isinstance(response, str):
             return Response(response).to_dict()
-
         return Response('', status_code=HTTPStatus.INTERNAL_SERVER_ERROR).to_dict()
 
-# pylint: disable=too-few-public-methods
+    def _get_function(self, request):
+        """Get the function associated with a request"""
+        function = self.routes.get(request.path)
+        if function is None:
+            raise ValueError('Route not registered: %s' % request.path)
+        return function
+
+
 # pylint: disable=too-many-instance-attributes
 class Request():
     """Proxy Integration request

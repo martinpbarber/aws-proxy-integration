@@ -1,6 +1,7 @@
 """Tests for the aws_proxy_integration.proxy module"""
 from http import HTTPStatus
 import pytest
+import common
 from aws_proxy_integration.proxy import Proxy
 
 # The following prevents pylint error when using fixtures
@@ -11,20 +12,7 @@ from aws_proxy_integration.proxy import Proxy
 @pytest.fixture
 def event():
     """Return an empty API Gateway proxy event"""
-    return {
-        "resource": "",
-        "path": "",
-        "httpMethod": "",
-        "headers": {},
-        "multiValueHeaders": {},
-        "queryStringParameters": {},
-        "multiValueQueryStringParameters": {},
-        "pathParameters": {},
-        "stageVariables": {},
-        "requestContext": {},
-        "body": "",
-        "isBase64Encoded": False,
-    }
+    return common.api_gateway_proxy_event()
 
 @pytest.fixture
 def context():
@@ -53,7 +41,7 @@ def test_proxy_init(proxy):
 
 def test_proxy_add_route(event, context, proxy_with_index_route):
     """Add a route to Proxy"""
-    event['resource'] = '/'
+    event['path'] = '/'
     response = proxy_with_index_route(event, context)
 
     assert is_proxy_integration_response(response)
@@ -61,7 +49,7 @@ def test_proxy_add_route(event, context, proxy_with_index_route):
 
 def test_proxy_route_not_registered(event, context, proxy_with_index_route):
     """Provided route not registered with Proxy"""
-    event['resource'] = '/wrong'
+    event['path'] = '/wrong'
     with pytest.raises(ValueError) as exception_info:
         proxy_with_index_route(event, context)
     assert str(exception_info.value) == 'Route not registered: /wrong'
@@ -72,7 +60,7 @@ def test_proxy_no_return(event, context, proxy):
     def index():    # pylint: disable=unused-variable
         pass
 
-    event['resource'] = '/'
+    event['path'] = '/'
     response = proxy(event, context)
 
     assert is_proxy_integration_response(response)
