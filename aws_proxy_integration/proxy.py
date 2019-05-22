@@ -15,6 +15,7 @@ class Proxy():
         self._logger = LOGGER
         self._router = Router()
         self._request = None
+        self._context = None
 
     def route(self, path):
         """Route Decorator"""
@@ -26,6 +27,7 @@ class Proxy():
     def __call__(self, event, context):
         """Process API Gateway event"""
         self._request = Request(event)
+        self._context = context
         response = self._router.route(self._request)
         return response
 
@@ -39,6 +41,10 @@ class Proxy():
         """Request property"""
         return self._request
 
+    @property
+    def context(self):
+        """Lambda Context property"""
+        return self._context
 
 class Router():
     """Register and process routes"""
