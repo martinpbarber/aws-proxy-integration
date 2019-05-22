@@ -28,6 +28,10 @@ class Proxy():
         response = self._router.route(request)
         return response
 
+    @property
+    def logger(self):
+        return self._logger
+
 
 class Router():
     """Register and process routes"""
