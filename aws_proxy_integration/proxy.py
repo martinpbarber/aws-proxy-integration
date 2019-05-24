@@ -48,12 +48,29 @@ class Proxy():
 
 class Router():
     """Register and process routes"""
+
+    HTTP_METHODS = ('GET', 'POST', 'PUT', 'HEAD', 'DELETE', 'PATCH', 'OPTIONS')
+    DEFAULT_METHODS = ('GET',)
+
     def __init__(self):
         self.routes = {}
 
-    def add_route(self, path, function):
+    def add_route(self, path, function, methods=DEFAULT_METHODS):
         """Add a route"""
+        Router._validate_methods(methods)
         self.routes[path] = function
+
+    @staticmethod
+    def _validate_methods(methods):
+        if not isinstance(methods, (list, tuple)):
+            raise ValueError(f'Methods must be a list/tuple: {Router.HTTP_METHODS}')
+
+        invalid_methods = []
+        for method in methods:
+            if method not in Router.HTTP_METHODS:
+                invalid_methods.append(method)
+        if invalid_methods:
+            raise ValueError(f'Methods are invalid: {invalid_methods}')
 
     def route(self, request):
         """Route a request to the associated function"""
@@ -195,17 +212,24 @@ class Response():
 
     def __init__(self, body,
                  status_code=200, headers=None, is_base_64_encoded=False):
+        self._validate_body(body)
+        self._validate_status_code(status_code)
+        self._validate_headers(headers)
+        self._validate_is_base_64_encoded(is_base_64_encoded)
+
+    def _validate_body(self, body):
         if isinstance(body, str):
             self._body = body
         else:
             raise ValueError('body must be a string')
 
+    def _validate_status_code(self, status_code):
         if any(status_code == code.value for code in HTTPStatus):
-            self._status_code = str(status_code)
             self._status_code = status_code
         else:
             raise ValueError('status_code must be a valid HTTP status code')
 
+    def _validate_headers(self, headers):
         if headers is None:
             self._headers = {}
         elif isinstance(headers, dict):
@@ -213,6 +237,7 @@ class Response():
         else:
             raise ValueError('headers must be a dictionary')
 
+    def _validate_is_base_64_encoded(self, is_base_64_encoded):
         if isinstance(is_base_64_encoded, bool):
             self._is_base_64_encoded = is_base_64_encoded
         else:
